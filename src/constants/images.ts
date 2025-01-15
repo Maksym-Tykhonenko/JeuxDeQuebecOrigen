@@ -1,0 +1,43 @@
+export const IMAGES = {
+  avatar: require('../assets/images/avatar.png'),
+  aperitifs: require('../assets/images/aperitifs.png'),
+  card_1: require('../assets/images/card_1.png'),
+  card_2: require('../assets/images/card_2.png'),
+  events: require('../assets/images/events.png'),
+  shows: require('../assets/images/shows.png'),
+  support: require('../assets/images/support.png'),
+  karaoke: require('../assets/images/karaoke.png'),
+  movie: require('../assets/images/movie.png'),
+  music: require('../assets/images/music.png'),
+  game: require('../assets/images/game.png'),
+  photo1: require('../assets/images/photo1.png'),
+  photo2: require('../assets/images/photo2.png'),
+  photo3: require('../assets/images/photo3.png'),
+  photo4: require('../assets/images/photo4.png'),
+  modal: require('../assets/images/modal.png'),
+  placeholder: require('../assets/images/placeholder.png'),
+  background: require('../assets/images/background.png'),
+};
+
+export const FRUITS: Record<string, any> = {
+  pear: require('../assets/images/pear.png'),
+  pear_active: require('../assets/images/pear-active.png'),
+  grapes: require('../assets/images/grapes.png'),
+  grapes_active: require('../assets/images/grapes-active.png'),
+  apple: require('../assets/images/apple.png'),
+  apple_active: require('../assets/images/apple-active.png'),
+
+  raspberry: require('../assets/images/raspberry.png'),
+  raspberry_active: require('../assets/images/raspberry-active.png'),
+  orange: require('../assets/images/orange.png'),
+  orange_active: require('../assets/images/orange-active.png'),
+  watermelon: require('../assets/images/watermelon.png'),
+  watermelon_active: require('../assets/images/watermelon-active.png'),
+
+  lime: require('../assets/images/lime.png'),
+  lime_active: require('../assets/images/lime-active.png'),
+  plum: require('../assets/images/plum.png'),
+  plum_active: require('../assets/images/plum-active.png'),
+  cherry: require('../assets/images/cherry.png'),
+  cherry_active: require('../assets/images/cherry-active.png'),
+};
