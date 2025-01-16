@@ -5,6 +5,8 @@ export const enum Screens {
   Home = 'tabs/home',
   Activities = 'home/activities',
   Rating = 'home/rating',
+  Gallery = 'home/gallery',
+  ImageFolder = 'home/ImageFolder',
 
   ActivitiesStack = 'tabs/activities-stack',
   Events = 'activities/events',

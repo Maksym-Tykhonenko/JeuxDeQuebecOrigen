@@ -6,6 +6,8 @@ import {ActivitiesScreen} from '../screens/activities-screen';
 import {HomeScreen} from '../screens/home-screen';
 import {CreateEventScreen} from '../screens/create-event-screen';
 import {RatingScreen} from '../screens/rating-screen';
+import {GalleryScreen} from '../screens/gallery-screen';
+import {ImageFolderScreen} from '../screens/image-folder-screen';
 
 const Stack = createNativeStackNavigator<StackParams.HomeStack>();
 
@@ -15,5 +17,7 @@ export const HomeStack = (): React.JSX.Element => (
     <Stack.Screen name={Screens.Activities} component={ActivitiesScreen} />
     <Stack.Screen name={Screens.CreateEvent} component={CreateEventScreen} />
     <Stack.Screen name={Screens.Rating} component={RatingScreen} />
+    <Stack.Screen name={Screens.Gallery} component={GalleryScreen} />
+    <Stack.Screen name={Screens.ImageFolder} component={ImageFolderScreen} />
   </Stack.Navigator>
 );

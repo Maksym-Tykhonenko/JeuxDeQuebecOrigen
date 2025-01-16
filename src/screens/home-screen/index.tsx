@@ -80,6 +80,28 @@ export const HomeScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.content}>
         <LogoHeader />
+        <ImageBackground
+          source={IMAGES.background}
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'hidden',
+            borderRadius: 15,
+            height: 80,
+            gap: 20,
+          }}>
+          <Button
+            onPress={() => navigate(Screens.Gallery)}
+            title="Open Gallery"
+            border={true}
+          />
+          <Button
+            onPress={() => navigate(Screens.Rating)}
+            title="View Rating"
+            border={true}
+          />
+        </ImageBackground>
         <View style={styles.rowContainer}>
           <Text style={{fontSize: 17, fontFamily: FONTS.PoppinsMedium}}>
             What You Can Do
@@ -109,21 +131,6 @@ export const HomeScreen = () => {
         <TouchableOpacity onPress={() => navigate(Screens.CreateEvent)}>
           <Image source={IMAGES.card_1} style={styles.image} />
         </TouchableOpacity>
-        <ImageBackground
-          source={IMAGES.background}
-          style={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden',
-            borderRadius: 15,
-            height: 80,
-          }}>
-          <Button
-            onPress={() => navigate(Screens.Rating)}
-            title="View rating"
-            border={true}
-          />
-        </ImageBackground>
       </ScrollView>
       {randomFruit && (
         <BonusModal

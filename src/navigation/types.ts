@@ -1,5 +1,6 @@
 import {Activity} from '../data/activities-list';
 import {Event} from '../data/events-list';
+import {Folder} from '../screens/gallery-screen';
 import {Screens} from './screens';
 
 export namespace StackParams {
@@ -21,5 +22,7 @@ export namespace StackParams {
     [Screens.Activities]: {data: Activity};
     [Screens.CreateEvent]: undefined;
     [Screens.Rating]: undefined;
+    [Screens.Gallery]: undefined;
+    [Screens.ImageFolder]: {folder: Folder};
   };
 }
