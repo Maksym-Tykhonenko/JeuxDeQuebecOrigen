@@ -5,7 +5,7 @@ import {TabStack} from './navigation/tab-stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {useBonusStore} from './store/useBonusStore';
 
-function App() {
+function App(): React.JSX.Element {
   const initializeBonus = useBonusStore(state => state.initializeBonus);
 
   useEffect(() => {

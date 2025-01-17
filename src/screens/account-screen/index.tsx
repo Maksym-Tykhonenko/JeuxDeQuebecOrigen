@@ -25,6 +25,7 @@ export const AccountScreen = () => {
   const [lastName, setLastName] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
   const [localAvatarUri, setLocalAvatarUri] = useState<string | null>(null);
+  const [hasStoredData, setHasStoredData] = useState<boolean>(false);
 
   useEffect(() => {
     const loadProfileData = async () => {
@@ -36,6 +37,14 @@ export const AccountScreen = () => {
           setLastName(profile.lastName || '');
           setNickname(profile.nickname || '');
           setLocalAvatarUri(profile.avatarUri || null);
+          const hasData =
+            Boolean(profile.name?.trim()) ||
+            Boolean(profile.lastName?.trim()) ||
+            Boolean(profile.nickname?.trim()) ||
+            Boolean(profile.avatarUri);
+          setHasStoredData(hasData);
+        } else {
+          setHasStoredData(false);
         }
       } catch (error) {
         console.error('Failed to load profile data from storage', error);
@@ -70,6 +79,7 @@ export const AccountScreen = () => {
           PROFILE_STORAGE_KEY,
           JSON.stringify(profile),
         );
+        setHasStoredData(true);
         Alert.alert('Profile Updated');
       } catch (error) {
         Alert.alert('Error', 'Failed to save profile data');
@@ -80,10 +90,23 @@ export const AccountScreen = () => {
     }
   };
 
-  const isAllFieldsEmpty =
-    !name.trim() && !lastName.trim() && !nickname.trim() && !localAvatarUri;
+  const handleReset = async () => {
+    try {
+      setName('');
+      setLastName('');
+      setNickname('');
+      setLocalAvatarUri(null);
 
-  const buttonTitle = isAllFieldsEmpty ? 'Save' : 'Change data';
+      await AsyncStorage.removeItem(PROFILE_STORAGE_KEY);
+      setHasStoredData(false);
+      Alert.alert('Profile Reset', 'All fields have been cleared.');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to reset profile data');
+      console.error('Failed to reset profile data', error);
+    }
+  };
+
+  const buttonTitle = !hasStoredData ? 'Save' : 'Change data';
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -133,7 +156,10 @@ export const AccountScreen = () => {
             />
           </View>
         </View>
-        <Button title={buttonTitle} onPress={handleSave} />
+        <View style={{gap: 10}}>
+          <Button title={buttonTitle} onPress={handleSave} />
+          {hasStoredData && <Button title="Reset" onPress={handleReset} />}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
