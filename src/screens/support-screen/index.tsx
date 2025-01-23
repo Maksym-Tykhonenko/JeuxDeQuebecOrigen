@@ -7,9 +7,22 @@ import {Button} from '../../components/button';
 import {SecondaryHeader} from '../../components/headers/secondary-header';
 import {styles} from './styles';
 import {useAppNavigation} from '../../hooks/useAppNavigation';
+import email from 'react-native-email';
 
 export const SupportScreen = () => {
   const {goBack} = useAppNavigation();
+
+  const handleEmail = () => {
+    const to = 'oliviaelmers1999@gmail.com';
+
+    email(to, {
+      subject: 'Support Request',
+      body: 'Hello, I need assistance with...',
+      checkCanOpen: false,
+    }).catch(error => {
+      console.error('Error opening email client:', error);
+    });
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -23,7 +36,7 @@ export const SupportScreen = () => {
           Do you have any questions? Click the button below to contact technical
           support via email
         </Text>
-        <Button onPress={() => null} title="Support" />
+        <Button onPress={handleEmail} title="Support" />
       </ScrollView>
     </SafeAreaView>
   );
