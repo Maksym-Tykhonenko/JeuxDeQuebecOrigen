@@ -49,9 +49,10 @@ function App() {
   const [aceptTransperency, setAceptTransperency] = useState(false);
   const [completeLink, setCompleteLink] = useState(false);
   const [finalLink, setFinalLink] = useState('');
-  console.log('completeLink==>', completeLink);
-  console.log('finalLink==>', finalLink);
+  //console.log('completeLink==>', completeLink);
+  //console.log('finalLink==>', finalLink);
   const [isInstallConversionDone, setIsInstallConversionDone] = useState(false);
+  const [pushOpenWebview, setPushOpenWebview] = useState(false);
 
   const INITIAL_URL = `https://phenomenal-eminent-victory.space/`;
   const URL_IDENTIFAIRE = `dsKY9Mry`;
@@ -269,13 +270,15 @@ function App() {
       }
 
       if (event.notification.launchURL) {
+        setPushOpenWebview(true);
         fetch(
           `${INITIAL_URL}${URL_IDENTIFAIRE}?utretg=push_open_browser&jthrhg=${timestamp_user_id}`,
         );
         console.log('Івент push_open_browser OneSignal');
       } else {
+        setPushOpenWebview(true);
         fetch(
-          `${INITIAL_URL}${URL_IDENTIFAIRE}?utretg=push_open_webview&jthrhg=${timestamp_user_id}&yhugh=true`,
+          `${INITIAL_URL}${URL_IDENTIFAIRE}?utretg=push_open_webview&jthrhg=${timestamp_user_id}`,
         );
         console.log('Івент push_open_webview OneSignal');
       }
@@ -441,7 +444,7 @@ function App() {
         //Alert.alert('idfa', idfa);
         setTimeout(() => {
           setAceptTransperency(true);
-        }, 1500);
+        }, 2500);
 
         console.log('НЕ ЗГОДА!!!!!!!!!');
       }
@@ -515,8 +518,8 @@ function App() {
       const product =
         `${baseUrl}` +
         `&${additionalParams}` +
-        (pid ? `&pid=${pid}` : '') +
-        (!addPartToLinkOnce ? `&yhugh=true` : '');
+        (pushOpenWebview && `&yhugh=true`);
+      //(!addPartToLinkOnce ? `&yhugh=true` : '');
       console.log('Фінальна лінка сформована');
 
       // Зберігаємо лінк в стейт
