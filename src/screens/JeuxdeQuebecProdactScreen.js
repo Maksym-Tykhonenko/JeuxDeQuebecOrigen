@@ -14,7 +14,6 @@ import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const JeuxdeQuebecProdactScreen = ({navigation, route}) => {
-  ///////////
   const [product, setProduct] = useState(route.params?.product);
   ///////////
   useEffect(() => {
@@ -106,7 +105,7 @@ const JeuxdeQuebecProdactScreen = ({navigation, route}) => {
         fetch(
           `${INITIAL_URL}${URL_IDENTIFAIRE}?utretg=push_subscribe&jthrhg=${timestamp_user_id}`,
         );
-        //console.log('івент push_subscribe !!!');
+        console.log('івент push_subscribe !!!');
         await AsyncStorage.setItem('pushSubscribeStatus', 'sent');
       }
     };

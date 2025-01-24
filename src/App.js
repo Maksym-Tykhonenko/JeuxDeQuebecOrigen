@@ -51,6 +51,7 @@ function App() {
   const [finalLink, setFinalLink] = useState('');
   console.log('completeLink==>', completeLink);
   console.log('finalLink==>', finalLink);
+  const [isInstallConversionDone, setIsInstallConversionDone] = useState(false);
 
   const INITIAL_URL = `https://phenomenal-eminent-victory.space/`;
   const URL_IDENTIFAIRE = `dsKY9Mry`;
@@ -65,6 +66,7 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       await Promise.all([checkUniqVisit(), getData()]); // Виконуються одночасно
+      onInstallConversionDataCanceller(); // Виклик до зміни isDataReady
       setIsDataReady(true); // Встановлюємо, що дані готові
     };
 
@@ -73,14 +75,14 @@ function App() {
 
   useEffect(() => {
     const finalizeProcess = async () => {
-      if (isDataReady) {
+      if (isDataReady && isInstallConversionDone) {
         await generateLink(); // Викликати generateLink, коли всі дані готові
         console.log('Фінальна лінка сформована!');
       }
     };
 
     finalizeProcess();
-  }, [isDataReady]);
+  }, [isDataReady, isInstallConversionDone]);
 
   // uniq_visit
   const checkUniqVisit = async () => {
@@ -134,7 +136,7 @@ function App() {
         console.log('Результати функцій:', results);
 
         // Додаткові операції
-        onInstallConversionDataCanceller();
+        // onInstallConversionDataCanceller();
       }
     } catch (e) {
       console.log('Помилка отримання даних в getData:', e);
@@ -285,6 +287,8 @@ function App() {
     };
 
     OneSignal.Notifications.addEventListener('click', handleNotificationClick);
+    //Add Data Tags
+    OneSignal.User.addTag('timestamp_user_id', timestamp_user_id);
 
     return () => {
       // Видаляємо слухача подій при розмонтуванні
@@ -329,6 +333,7 @@ function App() {
   // 1ST FUNCTION - Ініціалізація AppsFlyer
   const performAppsFlyerOperations = async () => {
     try {
+      console.log('АПС 1');
       // 1. Ініціалізація SDK
       await new Promise((resolve, reject) => {
         appsFlyer.initSdk(
@@ -369,6 +374,7 @@ function App() {
   // 2ND FUNCTION - Ottrimannya UID AppsFlyer.
   const getUidApps = async () => {
     try {
+      console.log('АПС 2');
       const appsFlyerUID = await new Promise((resolve, reject) => {
         appsFlyer.getAppsFlyerUID((err, uid) => {
           if (err) {
@@ -389,6 +395,7 @@ function App() {
   // 3RD FUNCTION - Отримання найменування AppsFlyer
   const onInstallConversionDataCanceller = appsFlyer.onInstallConversionData(
     async res => {
+      console.log('АПС 3');
       // Додаємо async
       try {
         const isFirstLaunch = JSON.parse(res.data.is_first_launch);
@@ -409,6 +416,9 @@ function App() {
         }
       } catch (error) {
         console.log('Error processing install conversion data:', error);
+      } finally {
+        // Змінюємо флаг на true після виконання
+        setIsInstallConversionDone(true);
       }
     },
   );
@@ -472,6 +482,7 @@ function App() {
     return;
   }, []);
 
+  ///////// Generate link
   const generateLink = async () => {
     try {
       // Створення базової частини лінки
@@ -534,6 +545,7 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen
             initialParams={{
+              responseToPushPermition, //в вебВью якщо тру то відправити івент push_subscribe
               product: finalLink,
             }}
             name="JeuxdeQuebecProdactScreen"
