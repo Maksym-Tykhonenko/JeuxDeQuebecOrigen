@@ -28,24 +28,29 @@ function App() {
   //console.log('addPartToLinkOnce in App==>', addPartToLinkOnce);
   //////////////////Parametrs
   const [idfa, setIdfa] = useState(false);
-  console.log('idfa==>', idfa);
+  //console.log('idfa==>', idfa);//
   const [oneSignalId, setOneSignalId] = useState(null);
-  console.log('oneSignalId==>', oneSignalId);
+  //console.log('oneSignalId==>', oneSignalId);
   const [appsUid, setAppsUid] = useState(null);
   const [sab1, setSab1] = useState();
+  const [atribParam, setAtribParam] = useState(null);
   const [pid, setPid] = useState();
-  console.log('appsUid==>', appsUid);
+  //console.log('appsUid==>', appsUid);
   console.log('sab1==>', sab1);
   //console.log('pid==>', pid);
   const [customerUserId, setCustomerUserId] = useState(null);
-  console.log('customerUserID==>', customerUserId);
+  //console.log('customerUserID==>', customerUserId);
   const [idfv, setIdfv] = useState();
-  console.log('idfv==>', idfv);
+  //console.log('idfv==>', idfv);
   /////////Atributions
   const [adServicesAtribution, setAdServicesAtribution] = useState(null);
   //const [adServicesKeywordId, setAdServicesKeywordId] = useState(null);
+  const [isDataReady, setIsDataReady] = useState(false);
   const [aceptTransperency, setAceptTransperency] = useState(false);
-  console.log('aceptTransperency==>', aceptTransperency);
+  const [completeLink, setCompleteLink] = useState(false);
+  const [finalLink, setFinalLink] = useState('');
+  console.log('completeLink==>', completeLink);
+  console.log('finalLink==>', finalLink);
 
   const INITIAL_URL = `https://phenomenal-eminent-victory.space/`;
   const URL_IDENTIFAIRE = `dsKY9Mry`;
@@ -58,9 +63,24 @@ function App() {
   //console.log('idForTag', timestamp_user_id);
 
   useEffect(() => {
-    checkUniqVisit();
-    getData();
+    const fetchData = async () => {
+      await Promise.all([checkUniqVisit(), getData()]); // Виконуються одночасно
+      setIsDataReady(true); // Встановлюємо, що дані готові
+    };
+
+    fetchData();
   }, []);
+
+  useEffect(() => {
+    const finalizeProcess = async () => {
+      if (isDataReady) {
+        await generateLink(); // Викликати generateLink, коли всі дані готові
+        console.log('Фінальна лінка сформована!');
+      }
+    };
+
+    finalizeProcess();
+  }, [isDataReady]);
 
   // uniq_visit
   const checkUniqVisit = async () => {
@@ -96,15 +116,24 @@ function App() {
         setAdServicesAtribution(parsedData.adServicesAtribution);
         setAceptTransperency(parsedData.aceptTransperency);
         //
+        setCompleteLink(parsedData.completeLink);
+        setFinalLink(parsedData.finalLink);
+        //
         await performAppsFlyerOperationsContinuously();
       } else {
-        console.log('Даних немає в AsyncStorage');
-        await fetchIdfa();
-        await requestOneSignallFoo();
-        await performAppsFlyerOperations();
-        await getUidApps();
-        //await fetchAdServicesAttributionData(); // Вставка функції для отримання даних
+        // Якщо дані не знайдені в AsyncStorage
+        const results = await Promise.all([
+          fetchAdServicesAttributionData(),
+          fetchIdfa(),
+          requestOneSignallFoo(),
+          performAppsFlyerOperations(),
+          getUidApps(),
+        ]);
 
+        // Результати виконаних функцій
+        console.log('Результати функцій:', results);
+
+        // Додаткові операції
         onInstallConversionDataCanceller();
       }
     } catch (e) {
@@ -127,6 +156,8 @@ function App() {
         idfv,
         adServicesAtribution,
         aceptTransperency,
+        finalLink,
+        completeLink,
       };
       const jsonData = JSON.stringify(data);
       await AsyncStorage.setItem('App', jsonData);
@@ -151,9 +182,12 @@ function App() {
     idfv,
     adServicesAtribution,
     aceptTransperency,
+    finalLink,
+    completeLink,
   ]);
 
   const fetchAdServicesAttributionData = async () => {
+    console.log('Attribution');
     try {
       const adServicesAttributionData =
         await AppleAdsAttribution.getAdServicesAttributionData();
@@ -164,8 +198,9 @@ function App() {
       ({keywordId} = adServicesAttributionData);
 
       setAdServicesAtribution(attribution);
-      //setAdServicesKeywordId(keywordId);
-      setSab1(attribution ? 'asa' : '');
+      //setAdServicesKeywordId(keywordId);!sab1 ||
+      //setSab1(attribution ? 'asa' : '');
+      setAtribParam(attribution ? 'asa' : '');
 
       // Вывод значений в консоль
       //Alert.alert(`sab1: ${sab1}`);
@@ -366,12 +401,8 @@ function App() {
             setSab1(campaign);
             setPid(pid);
           } else if (res.data.af_status === 'Organic') {
-            // Викликаємо fetchAdServicesAttributionData і отримуємо attribution
-            //const adServicesAttributionData =
-            await fetchAdServicesAttributionData();
-            //const atribution = adServicesAttributionData?.attribution; // Якщо attribution немає, встановлюємо 'aca'
-            ////setSab1(attribution); // Записуємо в стейт
-            //setSab1(atribution ? 'asa' : '');
+            //await fetchAdServicesAttributionData();
+            console.log('Organic');
           }
         } else {
           //console.log('This is not first launch');
@@ -426,7 +457,7 @@ function App() {
         fetch(checkUrl)
           .then(r => {
             if (r.status === 200) {
-              console.log('status по клоаке==>', r.status);
+              //console.log('status по клоаке==>', r.status);
               setRoute(true);
             } else {
               setRoute(false);
@@ -441,39 +472,59 @@ function App() {
     return;
   }, []);
 
-  ////////////////////////// Generate link
-  let baseUrl = `${INITIAL_URL}${URL_IDENTIFAIRE}?${URL_IDENTIFAIRE}=1&idfa=${idfa}&uid=${appsUid}&customerUserId=${customerUserId}&idfv=${idfv}&oneSignalId=${oneSignalId}`;
+  const generateLink = async () => {
+    try {
+      // Створення базової частини лінки
+      let baseUrl = `${INITIAL_URL}${URL_IDENTIFAIRE}?${URL_IDENTIFAIRE}=1&idfa=${idfa}&uid=${appsUid}&customerUserId=${customerUserId}&idfv=${idfv}&oneSignalId=${oneSignalId}`;
 
-  // Логіка обробки sab
-  let additionalParams = '';
-  if (sab1) {
-    if (sab1.includes('_')) {
-      // Якщо sab містить "_", розбиваємо і формуємо subId
-      let sabParts = sab1.split('_');
-      additionalParams = sabParts
-        .map((part, index) => `subId${index + 1}=${part}`)
-        .join('&');
-    } else {
-      // Якщо sab не містить "_", встановлюємо значення subId1=sab
-      additionalParams = `subId1=${sab1}`;
+      // Логіка обробки sab1
+      let additionalParams = '';
+      if (sab1) {
+        if (sab1.includes('_')) {
+          console.log('Якщо sab1 містить "_", розбиваємо і формуємо subId');
+          // Якщо sab1 містить "_", розбиваємо і формуємо subId
+          let sabParts = sab1.split('_');
+          additionalParams = sabParts
+            .map((part, index) => `subId${index + 1}=${part}`)
+            .join('&');
+        } else {
+          console.log('Якщо sab1 не містить "_", встановлюємо subId1=sab1');
+          // Якщо sab1 не містить "_", встановлюємо subId1=sab1
+          additionalParams = `subId1=${sab1}`;
+        }
+      } else {
+        console.log(
+          'Якщо sab1 undefined або пустий, встановлюємо subId1=atribParam',
+        );
+        // Якщо sab1 undefined або пустий, встановлюємо subId1=atribParam
+        additionalParams = `subId1=${atribParam}`;
+      }
+
+      // Формування фінального лінку
+      const product =
+        `${baseUrl}` +
+        `&${additionalParams}` +
+        (pid ? `&pid=${pid}` : '') +
+        (!addPartToLinkOnce ? `&yhugh=true` : '');
+      console.log('Фінальна лінка сформована');
+
+      // Зберігаємо лінк в стейт
+      setFinalLink(product);
+
+      // Встановлюємо completeLink у true
+      setTimeout(() => {
+        setCompleteLink(true);
+      }, 2000);
+    } catch (error) {
+      console.error('Помилка при формуванні лінку:', error);
     }
-  } else {
-    // Якщо sab пустий або undefined, subId1 залишається порожнім
-    additionalParams = 'subId1=';
-  }
-  //console.log('additionalParams', additionalParams);
+  };
 
-  const product =
-    `${baseUrl}` +
-    `&${additionalParams}` +
-    (pid ? `&pid=${pid}` : '') +
-    (!addPartToLinkOnce ? `&yhugh=true` : '');
-
-  console.log('My product Url ==>', product);
+  //console.log('My product Url ==>', product);
 
   ///////// Route
   const Route = ({isFatch}) => {
-    if (!aceptTransperency) {
+    if (!aceptTransperency || !completeLink) {
       // Показуємо тільки лоудери, поки acceptTransparency не true
       return null;
     }
@@ -483,7 +534,7 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen
             initialParams={{
-              product,
+              product: finalLink,
             }}
             name="JeuxdeQuebecProdactScreen"
             component={JeuxdeQuebecProdactScreen}
@@ -535,7 +586,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        {!louderIsEnded || !aceptTransperency ? (
+        {!louderIsEnded || !aceptTransperency || !completeLink ? (
           <View
             style={{
               position: 'relative',
