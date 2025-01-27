@@ -34,7 +34,7 @@ function App() {
   const [appsUid, setAppsUid] = useState(null);
   const [sab1, setSab1] = useState();
   const [atribParam, setAtribParam] = useState(null);
-  const [pid, setPid] = useState();
+  //const [pid, setPid] = useState();
   //console.log('appsUid==>', appsUid);
   console.log('sab1==>', sab1);
   //console.log('pid==>', pid);
@@ -50,9 +50,10 @@ function App() {
   const [completeLink, setCompleteLink] = useState(false);
   const [finalLink, setFinalLink] = useState('');
   //console.log('completeLink==>', completeLink);
-  //console.log('finalLink==>', finalLink);
+  console.log('finalLink==>', finalLink);
   const [isInstallConversionDone, setIsInstallConversionDone] = useState(false);
   const [pushOpenWebview, setPushOpenWebview] = useState(false);
+  console.log('pushOpenWebview==>', pushOpenWebview);
 
   const INITIAL_URL = `https://phenomenal-eminent-victory.space/`;
   const URL_IDENTIFAIRE = `dsKY9Mry`;
@@ -113,7 +114,8 @@ function App() {
         setIdfa(parsedData.idfa);
         setAppsUid(parsedData.appsUid);
         setSab1(parsedData.sab1);
-        setPid(parsedData.pid);
+        setAtribParam(parsedData.atribParam);
+        //setPid(parsedData.pid);
         setCustomerUserId(parsedData.customerUserId);
         setIdfv(parsedData.idfv);
         setAdServicesAtribution(parsedData.adServicesAtribution);
@@ -154,7 +156,8 @@ function App() {
         idfa,
         appsUid,
         sab1,
-        pid,
+        atribParam,
+        //pid,
         customerUserId,
         idfv,
         adServicesAtribution,
@@ -180,7 +183,8 @@ function App() {
     idfa,
     appsUid,
     sab1,
-    pid,
+    atribParam,
+    //pid,
     customerUserId,
     idfv,
     adServicesAtribution,
@@ -409,7 +413,7 @@ function App() {
 
             const {campaign, pid, af_adset, af_ad, af_os} = res.data;
             setSab1(campaign);
-            setPid(pid);
+            //setPid(pid);
           } else if (res.data.af_status === 'Organic') {
             //await fetchAdServicesAttributionData();
             console.log('Organic');
@@ -518,7 +522,7 @@ function App() {
       const product =
         `${baseUrl}` +
         `&${additionalParams}` +
-        (pushOpenWebview && `&yhugh=true`);
+        (pushOpenWebview && '&yhugh=true');
       //(!addPartToLinkOnce ? `&yhugh=true` : '');
       console.log('Фінальна лінка сформована');
 

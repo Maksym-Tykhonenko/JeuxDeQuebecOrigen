@@ -502,7 +502,7 @@
 				CODE_SIGN_ENTITLEMENTS = JeuxdeQuebec/JeuxdeQuebec.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 9K8H9V5TG5;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = JeuxdeQuebec/Info.plist;
@@ -537,7 +537,7 @@
 				CODE_SIGN_ENTITLEMENTS = JeuxdeQuebec/JeuxdeQuebec.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 9K8H9V5TG5;
 				INFOPLIST_FILE = JeuxdeQuebec/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Jeuxde Quebec";
