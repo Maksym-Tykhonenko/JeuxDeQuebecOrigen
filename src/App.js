@@ -35,7 +35,7 @@ function App() {
   const [sab1, setSab1] = useState();
   const [atribParam, setAtribParam] = useState(null);
   //const [pid, setPid] = useState();
-  //console.log('appsUid==>', appsUid);
+  console.log('atribParam==>', atribParam);
   console.log('sab1==>', sab1);
   //console.log('pid==>', pid);
   const [customerUserId, setCustomerUserId] = useState(null);

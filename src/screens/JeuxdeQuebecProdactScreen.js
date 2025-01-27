@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const JeuxdeQuebecProdactScreen = ({navigation, route}) => {
   const [product, setProduct] = useState(route.params?.product);
   ///////////
+  {
+    /**
   useEffect(() => {
     getData();
   }, []);
@@ -49,7 +51,8 @@ const JeuxdeQuebecProdactScreen = ({navigation, route}) => {
       console.log(err);
     }
   };
-
+ */
+  }
   const INITIAL_URL = `https://phenomenal-eminent-victory.space/`;
   const URL_IDENTIFAIRE = `dsKY9Mry`;
 
