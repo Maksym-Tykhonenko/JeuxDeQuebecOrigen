@@ -520,7 +520,7 @@ function App() {
       }
       console.log('additionalParams====>', additionalParams);
       // Формування фінального лінку
-      const product = `${baseUrl}&${additionalParams}`;
+      const product = `${baseUrl}&${additionalParams}&yhugh=${pushOpenWebview}`;
       //(!addPartToLinkOnce ? `&yhugh=true` : ''); pushOpenWebview && '&yhugh=true'
       console.log('Фінальна лінка сформована');
 
