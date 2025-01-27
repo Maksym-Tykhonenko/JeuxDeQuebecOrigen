@@ -506,11 +506,11 @@ function App() {
           additionalParams = sabParts
             .map((part, index) => `subId${index + 1}=${part}`)
             .join('&');
-        } else {
-          console.log('Якщо sab1 не містить "_", встановлюємо subId1=sab1');
-          // Якщо sab1 не містить "_", встановлюємо subId1=sab1
-          additionalParams = `subId1=${sab1}`;
-        }
+        } //else {
+        //console.log('Якщо sab1 не містить "_", встановлюємо subId1=sab1');
+        //// Якщо sab1 не містить "_", встановлюємо subId1=sab1
+        //additionalParams = `subId1=${sab1}`;
+        //}
       } else {
         console.log(
           'Якщо sab1 undefined або пустий, встановлюємо subId1=atribParam',
