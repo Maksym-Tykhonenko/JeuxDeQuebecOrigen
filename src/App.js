@@ -194,7 +194,6 @@ function App() {
   ]);
 
   const fetchAdServicesAttributionData = async () => {
-    console.log('Attribution');
     try {
       const adServicesAttributionData =
         await AppleAdsAttribution.getAdServicesAttributionData();
@@ -216,6 +215,8 @@ function App() {
     } catch (error) {
       const {message} = error;
       //Alert.alert(message); // --> Some error message
+    } finally {
+      console.log('Attribution');
     }
   };
 
@@ -517,13 +518,10 @@ function App() {
         // Якщо sab1 undefined або пустий, встановлюємо subId1=atribParam
         additionalParams = `subId1=${atribParam}`;
       }
-
+      console.log('additionalParams====>', additionalParams);
       // Формування фінального лінку
-      const product =
-        `${baseUrl}` +
-        `&${additionalParams}` +
-        (pushOpenWebview && '&yhugh=true');
-      //(!addPartToLinkOnce ? `&yhugh=true` : '');
+      const product = `${baseUrl}&${additionalParams}`;
+      //(!addPartToLinkOnce ? `&yhugh=true` : ''); pushOpenWebview && '&yhugh=true'
       console.log('Фінальна лінка сформована');
 
       // Зберігаємо лінк в стейт
